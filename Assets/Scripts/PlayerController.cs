@@ -21,6 +21,7 @@ public class PlayerController : MonoBehaviour
     private Vector3 currentMovement;
     private bool isMovementPressed;
 
+
     float rotationFactorPerFrame = 1f;    
 
 
@@ -58,7 +59,7 @@ public class PlayerController : MonoBehaviour
     {
         playerInputs = new PlayerInputs();
         controller = GetComponent<CharacterController>();
-        animator = GetComponent<Animator>();
+        //animator = GetComponent<Animator>();
 
         playerInputs.CharacterController.Move.started += context =>
         {
