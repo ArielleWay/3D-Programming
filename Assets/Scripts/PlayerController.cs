@@ -20,26 +20,41 @@ public class PlayerController : MonoBehaviour
     private Vector2 currentMovementInput;
     private Vector3 currentMovement;
     private bool isMovementPressed;
+    private bool isRunningInput;
+    private bool isRunning;
 
+    public float rotationFactorPerFrame = 1f;    
 
-    float rotationFactorPerFrame = 1f;    
-
-
+    void Start()
+    {
+        controller = GetComponent<CharacterController>();
+    }
     // Update is called once per frame
     void Update()
     {
-        controller.Move(currentMovement * Time.deltaTime);
-        bool isWalking = animator.GetBool("isWalking");
-        bool isRunning = animator.GetBool("isRunning");
 
-        if(isMovementPressed && isWalking)
+        controller.Move(currentMovement * Time.deltaTime);
+        Debug.Log(currentMovement);
+        animator.SetBool("isWalking", currentMovement != Vector3.zero);
+        isGrounded = controller.isGrounded;
+        float moveX = Input.GetAxis("Horizontal");
+        float moveZ = Input.GetAxis("Vertical");
+        Debug.Log(playerInputs.CharacterController.Run.wantsInitialStateCheck);
+
+        if (isGrounded && velocity.y < 0)
         {
-            animator.SetBool("isWalking", true);
+            velocity.y = -2f;
         }
-        else if (!isMovementPressed && isWalking)
+
+        if (isGrounded && Input.GetButtonDown("Jump"))
         {
-            animator.SetBool("isWalking", false);
+            velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
         }
+
+        velocity.y += gravity * Time.deltaTime;
+
+        controller.Move(velocity * Time.deltaTime);
+
 
         Vector3 positionToLookAt;
         positionToLookAt.x = currentMovement.x;
@@ -49,7 +64,6 @@ public class PlayerController : MonoBehaviour
 
         if (isMovementPressed)
         {
-
             Quaternion targetLocation = Quaternion.LookRotation(positionToLookAt);
             transform.rotation = Quaternion.Slerp(currentRotation, targetLocation, rotationFactorPerFrame * Time.deltaTime);
         }
@@ -67,6 +81,7 @@ public class PlayerController : MonoBehaviour
             currentMovement.x = currentMovementInput.x;
             currentMovement.z = currentMovementInput.y;
             isMovementPressed = currentMovementInput.x != 0 || currentMovementInput.y != 0;
+       
         };
 
         playerInputs.CharacterController.Move.canceled += context =>
@@ -75,7 +90,24 @@ public class PlayerController : MonoBehaviour
             currentMovement.x = currentMovementInput.x;
             currentMovement.z = currentMovementInput.y;
             isMovementPressed = currentMovementInput.x != 0 || currentMovementInput.y != 0;
+    
+
         };
+
+        playerInputs.CharacterController.Run.started += context =>
+        {
+            isRunningInput = context.ReadValue<bool>();
+            isRunning = isRunningInput;
+        };
+
+        playerInputs.CharacterController.Run.canceled += context =>
+        {
+            isRunningInput = context.ReadValue<bool>();
+            isRunning = isRunningInput;
+
+        };
+
+        
     }
 
     private void OnEnable()

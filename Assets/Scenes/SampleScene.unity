@@ -215,7 +215,7 @@ Transform:
   m_GameObject: {fileID: 85396136}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -6.360964, y: -0.03999996, z: 11.886}
-  m_LocalScale: {x: 1, y: 1.0654, z: 1.7372}
+  m_LocalScale: {x: 2.8038, y: 1.0654, z: 1.7372}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -539,6 +539,7 @@ MonoBehaviour:
   jumpHeight: 2
   controller: {fileID: 1082295686}
   animator: {fileID: 957479242}
+  rotationFactorPerFrame: 5
 --- !u!1 &1206787425
 GameObject:
   m_ObjectHideFlags: 0
