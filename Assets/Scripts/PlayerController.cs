@@ -73,8 +73,10 @@ public class PlayerController : MonoBehaviour
             transform.rotation = Quaternion.Slerp(currentRotation, targetLocation, rotationFactorPerFrame * Time.deltaTime);
         }
 
-        animator.SetBool("isGrounded", isGrounded);
-        animator.SetFloat("yVelocity", velocity.y);
+        // Set isRunning based on left shift key press
+        bool isRunningNow = Input.GetKey(KeyCode.LeftShift) && isMovementPressed;
+        animator.SetBool("isRunning", isRunningNow);
+        Debug.Log("Is Running: " + isRunningNow);
     }
 
     private void Awake()
@@ -85,16 +87,18 @@ public class PlayerController : MonoBehaviour
         playerInputs.CharacterController.Move.started += context =>
         {
             currentMovementInput = context.ReadValue<Vector2>();
-            currentMovement.x = currentMovementInput.x;
-            currentMovement.z = currentMovementInput.y;
+            float movementSpeed = Input.GetKey(KeyCode.LeftShift) ? speed * 2f : speed / 2f; // Adjust walk speed
+            currentMovement.x = currentMovementInput.x * movementSpeed;
+            currentMovement.z = currentMovementInput.y * movementSpeed;
             isMovementPressed = currentMovementInput.x != 0 || currentMovementInput.y != 0;
         };
 
         playerInputs.CharacterController.Move.canceled += context =>
         {
             currentMovementInput = context.ReadValue<Vector2>();
-            currentMovement.x = currentMovementInput.x;
-            currentMovement.z = currentMovementInput.y;
+            float movementSpeed = Input.GetKey(KeyCode.LeftShift) ? speed * 2f : speed / 2f; // Adjust walk speed
+            currentMovement.x = currentMovementInput.x * movementSpeed;
+            currentMovement.z = currentMovementInput.y * movementSpeed;
             isMovementPressed = currentMovementInput.x != 0 || currentMovementInput.y != 0;
         };
 
