@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.Rendering;
 
@@ -23,23 +22,30 @@ public class PlayerController : MonoBehaviour
     private bool isRunningInput;
     private bool isRunning;
 
-    public float rotationFactorPerFrame = 1f;    
+    [Header("Attack Settings")]
+    public float attackCooldown = 0.5f;
+    private bool canAttack = true;
+
+    [Header("Equip Settings")]
+    private bool isEquipped = false;
+    private bool canToggleEquip = true;
+    public float toggleCooldown = 0.5f;
+
+    public float rotationFactorPerFrame = 1f;
 
     void Start()
     {
         controller = GetComponent<CharacterController>();
     }
-    // Update is called once per frame
+
     void Update()
     {
-
         controller.Move(currentMovement * Time.deltaTime);
         Debug.Log(currentMovement);
         animator.SetBool("isWalking", currentMovement != Vector3.zero);
         isGrounded = controller.isGrounded;
         float moveX = Input.GetAxis("Horizontal");
         float moveZ = Input.GetAxis("Vertical");
-        Debug.Log(playerInputs.CharacterController.Run.wantsInitialStateCheck);
 
         if (isGrounded && velocity.y < 0)
         {
@@ -55,7 +61,6 @@ public class PlayerController : MonoBehaviour
 
         controller.Move(velocity * Time.deltaTime);
 
-
         Vector3 positionToLookAt;
         positionToLookAt.x = currentMovement.x;
         positionToLookAt.y = 0.0f;
@@ -67,13 +72,15 @@ public class PlayerController : MonoBehaviour
             Quaternion targetLocation = Quaternion.LookRotation(positionToLookAt);
             transform.rotation = Quaternion.Slerp(currentRotation, targetLocation, rotationFactorPerFrame * Time.deltaTime);
         }
+
+        animator.SetBool("isGrounded", isGrounded);
+        animator.SetFloat("yVelocity", velocity.y);
     }
 
     private void Awake()
     {
         playerInputs = new PlayerInputs();
         controller = GetComponent<CharacterController>();
-        //animator = GetComponent<Animator>();
 
         playerInputs.CharacterController.Move.started += context =>
         {
@@ -81,7 +88,6 @@ public class PlayerController : MonoBehaviour
             currentMovement.x = currentMovementInput.x;
             currentMovement.z = currentMovementInput.y;
             isMovementPressed = currentMovementInput.x != 0 || currentMovementInput.y != 0;
-       
         };
 
         playerInputs.CharacterController.Move.canceled += context =>
@@ -90,8 +96,6 @@ public class PlayerController : MonoBehaviour
             currentMovement.x = currentMovementInput.x;
             currentMovement.z = currentMovementInput.y;
             isMovementPressed = currentMovementInput.x != 0 || currentMovementInput.y != 0;
-    
-
         };
 
         playerInputs.CharacterController.Run.started += context =>
@@ -104,10 +108,71 @@ public class PlayerController : MonoBehaviour
         {
             isRunningInput = context.ReadValue<bool>();
             isRunning = isRunningInput;
-
         };
 
-        
+        playerInputs.CharacterController.Attack.started += context => PerformAttack();
+        playerInputs.CharacterController.Equip.started += context => ToggleEquip();
+    }
+
+    private void PerformAttack()
+    {
+        if (canAttack)
+        {
+            animator.SetTrigger("isAttacking");
+            StartCoroutine(AttackCooldown());
+            // Optional: Stop movement during attack
+            // currentMovement = Vector3.zero;
+        }
+    }
+
+    private IEnumerator AttackCooldown()
+    {
+        canAttack = false;
+        yield return new WaitForSeconds(attackCooldown);
+        canAttack = true;
+    }
+
+    private void ToggleEquip()
+    {
+        if (!canToggleEquip) return;
+
+        if (isEquipped)
+        {
+            UnequipWeapon();
+        }
+        else
+        {
+            EquipWeapon();
+        }
+
+        StartCoroutine(EquipCooldown());
+    }
+
+    private void EquipWeapon()
+    {
+        isEquipped = true;
+        animator.SetLayerWeight(animator.GetLayerIndex("EquipLayer"), 1f);
+        animator.SetLayerWeight(animator.GetLayerIndex("UnequipLayer"), 0f);
+        animator.SetBool("isEquipping", true);
+        // Optional: Stop movement during equip
+        // currentMovement = Vector3.zero;
+    }
+
+    private void UnequipWeapon()
+    {
+        isEquipped = false;
+        animator.SetLayerWeight(animator.GetLayerIndex("EquipLayer"), 0f);
+        animator.SetLayerWeight(animator.GetLayerIndex("UnequipLayer"), 1f);
+        animator.SetBool("isUnequipping", true);
+        // Optional: Stop movement during unequip
+        // currentMovement = Vector3.zero;
+    }
+
+    private IEnumerator EquipCooldown()
+    {
+        canToggleEquip = false;
+        yield return new WaitForSeconds(toggleCooldown);
+        canToggleEquip = true;
     }
 
     private void OnEnable()
@@ -118,5 +183,18 @@ public class PlayerController : MonoBehaviour
     private void OnDisable()
     {
         playerInputs.CharacterController.Disable();
+    }
+
+    // Call these from animation events at the end of equip/unequip animations
+    private void OnEquipComplete()
+    {
+        animator.SetLayerWeight(animator.GetLayerIndex("EquipLayer"), 0f);
+        animator.SetBool("isEquipping", false);
+    }
+
+    private void OnUnequipComplete()
+    {
+        animator.SetLayerWeight(animator.GetLayerIndex("UnequipLayer"), 0f);
+        animator.SetBool("isUnequipping", false);
     }
 }
