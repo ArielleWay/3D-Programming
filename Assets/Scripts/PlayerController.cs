@@ -41,7 +41,7 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         controller.Move(currentMovement * Time.deltaTime);
-        Debug.Log(currentMovement);
+        //Debug.Log(currentMovement);
         animator.SetBool("isWalking", currentMovement != Vector3.zero);
         isGrounded = controller.isGrounded;
         float moveX = Input.GetAxis("Horizontal");
@@ -76,7 +76,7 @@ public class PlayerController : MonoBehaviour
         // Set isRunning based on left shift key press
         bool isRunningNow = Input.GetKey(KeyCode.LeftShift) && isMovementPressed;
         animator.SetBool("isRunning", isRunningNow);
-        Debug.Log("Is Running: " + isRunningNow);
+        //Debug.Log("Is Running: " + isRunningNow);
     }
 
     private void Awake()
@@ -158,6 +158,9 @@ public class PlayerController : MonoBehaviour
         animator.SetLayerWeight(animator.GetLayerIndex("EquipLayer"), 1f);
         animator.SetLayerWeight(animator.GetLayerIndex("UnequipLayer"), 0f);
         animator.SetBool("isEquipping", true);
+        animator.SetTrigger("isEquipping");
+        Debug.Log("equipped!");
+        //Debug.Log("Equip Layer Index: " + EquipLayer);
         // Optional: Stop movement during equip
         // currentMovement = Vector3.zero;
     }
@@ -168,6 +171,9 @@ public class PlayerController : MonoBehaviour
         animator.SetLayerWeight(animator.GetLayerIndex("EquipLayer"), 0f);
         animator.SetLayerWeight(animator.GetLayerIndex("UnequipLayer"), 1f);
         animator.SetBool("isUnequipping", true);
+        animator.SetTrigger("isUnequipping");
+        Debug.Log("unequipped!");
+        //Debug.Log("Unequip Layer Index: " + UnequipLayer);
         // Optional: Stop movement during unequip
         // currentMovement = Vector3.zero;
     }
