@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
+
 using UnityEngine.Rendering;
 
 public class PlayerController : MonoBehaviour
@@ -32,6 +34,9 @@ public class PlayerController : MonoBehaviour
     public float toggleCooldown = 0.5f;
 
     public float rotationFactorPerFrame = 1f;
+
+    // Inventory Integration
+    public InventoryManager inventoryManager;
 
     void Start()
     {
@@ -77,6 +82,18 @@ public class PlayerController : MonoBehaviour
         bool isRunningNow = Input.GetKey(KeyCode.LeftShift) && isMovementPressed;
         animator.SetBool("isRunning", isRunningNow);
         //Debug.Log("Is Running: " + isRunningNow);
+
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            PickupItem();
+            Debug.Log("Picked Up");
+        }
+
+        // Example: Drop item on press 'D'
+        if (Input.GetKeyDown(KeyCode.V))
+        {
+            DropItem();
+        }
     }
 
     private void Awake()
@@ -206,5 +223,34 @@ public class PlayerController : MonoBehaviour
     {
         animator.SetLayerWeight(animator.GetLayerIndex("UnequipLayer"), 0f);
         animator.SetBool("isUnequipping", false);
+    }
+
+    private void PickupItem()
+    {
+        Collider[] hitColliders = Physics.OverlapSphere(transform.position, 1f);
+        foreach (var hitCollider in hitColliders)
+        {
+            if (hitCollider.CompareTag("Item"))
+            {
+                string itemName = hitCollider.gameObject.name;
+                inventoryManager.AddItem(itemName);
+                Destroy(hitCollider.gameObject); // Remove the item from the scene
+                Debug.Log($"Picked up {itemName}");
+                return;
+            }
+        }
+    }
+
+    private void DropItem()
+    {
+        // Example: Drop the first item in the inventory
+        if (inventoryManager.inventory.Count > 0)
+        {
+            var firstItem = inventoryManager.inventory.First().Value;
+            inventoryManager.RemoveItem(firstItem.itemName);
+            // Instantiate the item at the player's position
+            GameObject itemObject = Instantiate(Resources.Load<GameObject>(firstItem.itemName), transform.position, Quaternion.identity);
+            Debug.Log($"Dropped {firstItem.itemName}");
+        }
     }
 }
