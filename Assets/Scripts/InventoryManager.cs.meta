@@ -3,7 +3,8 @@ guid: f993c152078a1422da2c7b39d3554fe0
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - healthPotionPrefab: {fileID: 5182769876756695621, guid: 6da6359c9e4bf4ddfbe0917958f4197d, type: 3}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

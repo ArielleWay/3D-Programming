@@ -3,7 +3,11 @@ guid: 3593817c4f0bd4f5caa4ad70d218e002
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - controller: {instanceID: 0}
+  - animator: {instanceID: 0}
+  - HealthPotion: {fileID: 5182769876756695621, guid: 6da6359c9e4bf4ddfbe0917958f4197d, type: 3}
+  - inventoryManager: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

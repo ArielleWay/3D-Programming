@@ -12,6 +12,9 @@ public class InventoryItem
 public class InventoryManager : MonoBehaviour
 {
     public Dictionary<string, InventoryItem> inventory = new Dictionary<string, InventoryItem>();
+    
+    [Header("Item Prefabs")]
+    [SerializeField] private GameObject healthPotionPrefab;
 
     public void AddItem(string itemName)
     {
@@ -44,5 +47,18 @@ public class InventoryManager : MonoBehaviour
     public bool HasItem(string itemName)
     {
         return inventory.ContainsKey(itemName);
+    }
+
+    public void DropItem(string itemName, Vector3 position) //only for debug of healthpotion
+    {
+        if (itemName == "HealthPotion" && healthPotionPrefab != null)
+        {
+            Instantiate(healthPotionPrefab, position, Quaternion.identity);
+            RemoveItem(itemName);
+        }
+        else
+        {
+            Debug.LogWarning("No prefab found or unknown item: " + itemName);
+        }
     }
 }

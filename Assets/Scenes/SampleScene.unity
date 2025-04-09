@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.18028353, g: 0.22571383, b: 0.30692253, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028352, g: 0.22571376, b: 0.30692244, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -221,6 +221,25 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &704419148 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5182769876756695621, guid: 6da6359c9e4bf4ddfbe0917958f4197d, type: 3}
+  m_PrefabInstance: {fileID: 1653240154709766179}
+  m_PrefabAsset: {fileID: 0}
+--- !u!136 &704419153
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 704419148}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.056171626
+  m_Height: 0.13605799
+  m_Direction: 1
+  m_Center: {x: 0.0011573106, y: -0.00003280315, z: -0.003350254}
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
@@ -712,24 +731,33 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6020803934896299142, guid: 6da6359c9e4bf4ddfbe0917958f4197d, type: 3}
+      propertyPath: m_Size.x
+      value: 0.11053192
+      objectReference: {fileID: 0}
+    - target: {fileID: 6020803934896299142, guid: 6da6359c9e4bf4ddfbe0917958f4197d, type: 3}
       propertyPath: m_Size.y
-      value: 0.14899813
+      value: 0.08261639
       objectReference: {fileID: 0}
     - target: {fileID: 6020803934896299142, guid: 6da6359c9e4bf4ddfbe0917958f4197d, type: 3}
       propertyPath: m_Size.z
-      value: 0.047306385
+      value: 0.047306377
       objectReference: {fileID: 0}
     - target: {fileID: 6020803934896299142, guid: 6da6359c9e4bf4ddfbe0917958f4197d, type: 3}
       propertyPath: m_Center.x
-      value: 0.00025163344
+      value: 0.00025163215
       objectReference: {fileID: 0}
     - target: {fileID: 6020803934896299142, guid: 6da6359c9e4bf4ddfbe0917958f4197d, type: 3}
       propertyPath: m_Center.y
-      value: 0.006751381
+      value: -0.026439408
       objectReference: {fileID: 0}
     - target: {fileID: 6020803934896299142, guid: 6da6359c9e4bf4ddfbe0917958f4197d, type: 3}
       propertyPath: m_Center.z
-      value: -0.003350254
+      value: -0.003350253
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 6020803934896299142, guid: 6da6359c9e4bf4ddfbe0917958f4197d, type: 3}
+      propertyPath: m_IsTrigger
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 6020803934896299142, guid: 6da6359c9e4bf4ddfbe0917958f4197d, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 6da6359c9e4bf4ddfbe0917958f4197d, type: 3}

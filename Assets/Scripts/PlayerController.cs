@@ -24,6 +24,9 @@ public class PlayerController : MonoBehaviour
     private bool isRunningInput;
     private bool isRunning;
 
+    //public GameObject HealthPotion;
+    //MeshRenderer healthRenderer;
+
     [Header("Attack Settings")]
     public float attackCooldown = 0.5f;
     private bool canAttack = true;
@@ -36,11 +39,12 @@ public class PlayerController : MonoBehaviour
     public float rotationFactorPerFrame = 1f;
 
     // Inventory Integration
-    public InventoryManager inventoryManager;
+    [SerializeField] public InventoryManager inventoryManager;
 
     void Start()
     {
         controller = GetComponent<CharacterController>();
+        inventoryManager = FindObjectOfType<InventoryManager>();
     }
 
     private void PickupItem()
@@ -165,6 +169,14 @@ public class PlayerController : MonoBehaviour
         playerInputs.CharacterController.Attack.started += context => PerformAttack();
         playerInputs.CharacterController.Equip.started += context => ToggleEquip();
     }
+
+    //private void OnCollisionEnter(Collision collision)
+    //{
+    //    if (collision.gameObject.tag == "Item")
+    //    {
+    //        PickupItem();
+    //    }
+    //}
 
     private void PerformAttack()
     {
