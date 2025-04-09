@@ -43,6 +43,37 @@ public class PlayerController : MonoBehaviour
         controller = GetComponent<CharacterController>();
     }
 
+    private void PickupItem()
+    {
+        // Detect items within a small radius around the player
+        Collider[] hitColliders = Physics.OverlapSphere(transform.position, 1f);
+        foreach (var hitCollider in hitColliders)
+        {
+            if (hitCollider.CompareTag("Item")) // Check if the object has the "Item" tag
+            {
+                string itemName = hitCollider.gameObject.name; // Get the name of the item
+                inventoryManager.AddItem(itemName); // Add to inventory
+                Destroy(hitCollider.gameObject); // Destroy the item GameObject
+                Debug.Log($"Picked up {itemName}");
+                return;
+            }
+        }
+    }
+
+
+    private void DropItem()
+    {
+        // Example: Drop the first item in the inventory
+        if (inventoryManager.inventory.Count > 0)
+        {
+            var firstItem = inventoryManager.inventory.First().Value;
+            inventoryManager.RemoveItem(firstItem.itemName);
+            // Instantiate the item at the player's position
+            GameObject itemObject = Instantiate(Resources.Load<GameObject>(firstItem.itemName), transform.position, Quaternion.identity);
+            Debug.Log($"Dropped {firstItem.itemName}");
+        }
+    }
+
     void Update()
     {
         controller.Move(currentMovement * Time.deltaTime);
@@ -225,32 +256,5 @@ public class PlayerController : MonoBehaviour
         animator.SetBool("isUnequipping", false);
     }
 
-    private void PickupItem()
-    {
-        Collider[] hitColliders = Physics.OverlapSphere(transform.position, 1f);
-        foreach (var hitCollider in hitColliders)
-        {
-            if (hitCollider.CompareTag("Item"))
-            {
-                string itemName = hitCollider.gameObject.name;
-                inventoryManager.AddItem(itemName);
-                Destroy(hitCollider.gameObject); // Remove the item from the scene
-                Debug.Log($"Picked up {itemName}");
-                return;
-            }
-        }
-    }
-
-    private void DropItem()
-    {
-        // Example: Drop the first item in the inventory
-        if (inventoryManager.inventory.Count > 0)
-        {
-            var firstItem = inventoryManager.inventory.First().Value;
-            inventoryManager.RemoveItem(firstItem.itemName);
-            // Instantiate the item at the player's position
-            GameObject itemObject = Instantiate(Resources.Load<GameObject>(firstItem.itemName), transform.position, Quaternion.identity);
-            Debug.Log($"Dropped {firstItem.itemName}");
-        }
-    }
+   
 }

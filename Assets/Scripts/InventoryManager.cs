@@ -18,6 +18,7 @@ public class InventoryManager : MonoBehaviour
         if (inventory.ContainsKey(itemName))
         {
             inventory[itemName].quantity++;
+            Debug.Log("Item Added in Inventory");
         }
         else
         {
