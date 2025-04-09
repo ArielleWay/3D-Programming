@@ -24,6 +24,8 @@ public class PlayerController : MonoBehaviour
     private bool isRunningInput;
     private bool isRunning;
 
+    //private GameObject pickedUpItem = null;
+
     [Header("Attack Settings")]
     public float attackCooldown = 0.5f;
     private bool canAttack = true;
@@ -46,15 +48,17 @@ public class PlayerController : MonoBehaviour
 
     private void PickupItem()
     {
-        // Detect items within a small radius around the player
         Collider[] hitColliders = Physics.OverlapSphere(transform.position, 1f);
         foreach (var hitCollider in hitColliders)
         {
             if (hitCollider.CompareTag("Item")) // Check if the object has the "Item" tag
             {
-                string itemName = hitCollider.gameObject.name; // Get the name of the item
-                inventoryManager.AddItem(itemName); // Add to inventory
-                Destroy(hitCollider.gameObject); // Destroy the item GameObject
+                string itemName = hitCollider.gameObject.name;
+
+                inventoryManager.AddItem(itemName, hitCollider.gameObject);
+
+                hitCollider.gameObject.SetActive(false); // Disable the item in the world after picking it up
+
                 Debug.Log($"Picked up {itemName}");
                 return;
             }
@@ -64,18 +68,22 @@ public class PlayerController : MonoBehaviour
 
     private void DropItem()
     {
-        if (inventoryManager.inventory.Count > 0)
+        if (inventoryManager != null && inventoryManager.inventory.Count > 0)
         {
-            // Get the first item's name and data.
             var firstItem = inventoryManager.inventory.FirstOrDefault();
             if (firstItem.Value != null)
             {
-                string itemName = firstItem.Value.itemName; // Use the actual item name from the InventoryItem
-                Debug.Log($"Dropping {itemName}");
+                string itemName = firstItem.Value.itemName;
 
-                // Call the InventoryManager's DropItem method to handle instantiation and removal.
+                //Call the InvManager script to drop the item
                 inventoryManager.DropItem(itemName, transform.position);
+
+                Debug.Log($"Dropped {itemName}");
             }
+        }
+        else
+        {
+            Debug.LogWarning("Inventory Manager is missing / inventory is empty.");
         }
     }
 

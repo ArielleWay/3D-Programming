@@ -12,11 +12,12 @@ public class InventoryItem
 public class InventoryManager : MonoBehaviour
 {
     public Dictionary<string, InventoryItem> inventory = new Dictionary<string, InventoryItem>();
+    private Dictionary<string, GameObject> itemReferences = new Dictionary<string, GameObject>();
 
     [Header("Item Prefabs")]
     [SerializeField] private GameObject healthPotionPrefab;
 
-    public void AddItem(string itemName)
+    public void AddItem(string itemName, GameObject pickedUpItem)
     {
         if (inventory.ContainsKey(itemName))
         {
@@ -26,6 +27,11 @@ public class InventoryManager : MonoBehaviour
         else
         {
             inventory.Add(itemName, new InventoryItem { itemName = itemName, quantity = 1 });
+        }
+
+        if (!itemReferences.ContainsKey(itemName))
+        {
+            itemReferences[itemName] = pickedUpItem;
         }
     }
 
@@ -49,17 +55,19 @@ public class InventoryManager : MonoBehaviour
         return inventory.ContainsKey(itemName);
     }
 
-    public void DropItem(string itemName, Vector3 position) //only for debug of healthpotion
+    public void DropItem(string itemName, Vector3 position) 
     {
-        if (itemName == "HealthPotion" && healthPotionPrefab != null)
+        if (itemReferences.ContainsKey(itemName))
         {
-            Instantiate(healthPotionPrefab, position, Quaternion.identity);
-            RemoveItem(itemName);
-            Debug.Log("Dropped " + itemName);
+            GameObject itemToDrop = itemReferences[itemName]; // Get the reference to the actual GameObject
+            itemToDrop.transform.position = position; //Move it to the drop position
+            itemToDrop.SetActive(true);
+            RemoveItem(itemName); // Remove it from the inventory
+            Debug.Log($"Dropped {itemName} at {position}");
         }
         else
         {
-            Debug.LogWarning("No prefab found or unknown item: " + itemName);
+            Debug.LogWarning($"No reference found for item {itemName}");
         }
     }
 }
