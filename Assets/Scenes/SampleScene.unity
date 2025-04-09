@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.18028352, g: 0.22571376, b: 0.30692244, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028353, g: 0.22571383, b: 0.30692253, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -252,7 +252,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f993c152078a1422da2c7b39d3554fe0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthPotionPrefab: {fileID: 0}
+  healthPotionPrefab: {fileID: 704419148}
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
@@ -574,7 +574,7 @@ MonoBehaviour:
   attackCooldown: 0.5
   toggleCooldown: 0.5
   rotationFactorPerFrame: 5
-  inventoryManager: {fileID: 0}
+  inventoryManager: {fileID: 704419154}
 --- !u!1 &1206787425
 GameObject:
   m_ObjectHideFlags: 0

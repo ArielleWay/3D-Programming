@@ -24,9 +24,6 @@ public class PlayerController : MonoBehaviour
     private bool isRunningInput;
     private bool isRunning;
 
-    //public GameObject HealthPotion;
-    //MeshRenderer healthRenderer;
-
     [Header("Attack Settings")]
     public float attackCooldown = 0.5f;
     private bool canAttack = true;
@@ -67,14 +64,18 @@ public class PlayerController : MonoBehaviour
 
     private void DropItem()
     {
-        // Example: Drop the first item in the inventory
         if (inventoryManager.inventory.Count > 0)
         {
-            var firstItem = inventoryManager.inventory.First().Value;
-            inventoryManager.RemoveItem(firstItem.itemName);
-            // Instantiate the item at the player's position
-            GameObject itemObject = Instantiate(Resources.Load<GameObject>(firstItem.itemName), transform.position, Quaternion.identity);
-            Debug.Log($"Dropped {firstItem.itemName}");
+            // Get the first item's name and data.
+            var firstItem = inventoryManager.inventory.FirstOrDefault();
+            if (firstItem.Value != null)
+            {
+                string itemName = firstItem.Value.itemName; // Use the actual item name from the InventoryItem
+                Debug.Log($"Dropping {itemName}");
+
+                // Call the InventoryManager's DropItem method to handle instantiation and removal.
+                inventoryManager.DropItem(itemName, transform.position);
+            }
         }
     }
 
@@ -170,14 +171,6 @@ public class PlayerController : MonoBehaviour
         playerInputs.CharacterController.Equip.started += context => ToggleEquip();
     }
 
-    //private void OnCollisionEnter(Collision collision)
-    //{
-    //    if (collision.gameObject.tag == "Item")
-    //    {
-    //        PickupItem();
-    //    }
-    //}
-
     private void PerformAttack()
     {
         if (canAttack)
@@ -254,19 +247,4 @@ public class PlayerController : MonoBehaviour
     {
         playerInputs.CharacterController.Disable();
     }
-
-    // Call these from animation events at the end of equip/unequip animations
-    private void OnEquipComplete()
-    {
-        animator.SetLayerWeight(animator.GetLayerIndex("EquipLayer"), 0f);
-        animator.SetBool("isEquipping", false);
-    }
-
-    private void OnUnequipComplete()
-    {
-        animator.SetLayerWeight(animator.GetLayerIndex("UnequipLayer"), 0f);
-        animator.SetBool("isUnequipping", false);
-    }
-
-   
 }

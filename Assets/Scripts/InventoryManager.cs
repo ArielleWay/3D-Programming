@@ -12,7 +12,7 @@ public class InventoryItem
 public class InventoryManager : MonoBehaviour
 {
     public Dictionary<string, InventoryItem> inventory = new Dictionary<string, InventoryItem>();
-    
+
     [Header("Item Prefabs")]
     [SerializeField] private GameObject healthPotionPrefab;
 
@@ -55,6 +55,7 @@ public class InventoryManager : MonoBehaviour
         {
             Instantiate(healthPotionPrefab, position, Quaternion.identity);
             RemoveItem(itemName);
+            Debug.Log("Dropped " + itemName);
         }
         else
         {
