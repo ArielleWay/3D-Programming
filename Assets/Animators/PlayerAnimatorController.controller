@@ -626,18 +626,6 @@ AnimatorController:
     m_SyncedLayerAffectsTiming: 0
     m_Controller: {fileID: 9100000}
   - serializedVersion: 5
-    m_Name: Pick Up
-    m_StateMachine: {fileID: 597442115024171631}
-    m_Mask: {fileID: 31900000, guid: e1375bdbcf0ee451e8f3e3621e61edea, type: 2}
-    m_Motions: []
-    m_Behaviours: []
-    m_BlendingMode: 0
-    m_SyncedLayerIndex: -1
-    m_DefaultWeight: 1
-    m_IKPass: 0
-    m_SyncedLayerAffectsTiming: 0
-    m_Controller: {fileID: 9100000}
-  - serializedVersion: 5
     m_Name: Aiming
     m_StateMachine: {fileID: 4602644690487778637}
     m_Mask: {fileID: 31900000, guid: 629d874fdddfb462db6ee4134ef1d401, type: 2}
@@ -682,6 +670,18 @@ AnimatorController:
     m_BlendingMode: 0
     m_SyncedLayerIndex: -1
     m_DefaultWeight: 0
+    m_IKPass: 0
+    m_SyncedLayerAffectsTiming: 0
+    m_Controller: {fileID: 9100000}
+  - serializedVersion: 5
+    m_Name: Pick Up
+    m_StateMachine: {fileID: 597442115024171631}
+    m_Mask: {fileID: 31900000, guid: e1375bdbcf0ee451e8f3e3621e61edea, type: 2}
+    m_Motions: []
+    m_Behaviours: []
+    m_BlendingMode: 0
+    m_SyncedLayerIndex: -1
+    m_DefaultWeight: 1
     m_IKPass: 0
     m_SyncedLayerAffectsTiming: 0
     m_Controller: {fileID: 9100000}
