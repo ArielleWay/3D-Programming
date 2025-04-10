@@ -16,6 +16,7 @@ public class InventoryManager : MonoBehaviour
 
     [Header("Item Prefabs")]
     [SerializeField] private GameObject healthPotionPrefab;
+    [SerializeField] private GameObject manaPotionPrefab;
 
     public void AddItem(string itemName, GameObject pickedUpItem)
     {

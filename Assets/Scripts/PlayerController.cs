@@ -24,8 +24,6 @@ public class PlayerController : MonoBehaviour
     private bool isRunningInput;
     private bool isRunning;
 
-    //private GameObject pickedUpItem = null;
-
     [Header("Attack Settings")]
     public float attackCooldown = 0.5f;
     private bool canAttack = true;
@@ -34,6 +32,10 @@ public class PlayerController : MonoBehaviour
     private bool isEquipped = false;
     private bool canToggleEquip = true;
     public float toggleCooldown = 0.5f;
+
+    [Header("Pickup Settings")]
+    public float pickupCooldown = 0.5f;
+    private bool canPickup = true;
 
     public float rotationFactorPerFrame = 1f;
 
@@ -48,16 +50,18 @@ public class PlayerController : MonoBehaviour
 
     private void PickupItem()
     {
+        if (!canPickup) return;
+
         Collider[] hitColliders = Physics.OverlapSphere(transform.position, 1f);
         foreach (var hitCollider in hitColliders)
         {
-            if (hitCollider.CompareTag("Item")) // Check if the object has the "Item" tag
+            if (hitCollider.CompareTag("Item"))
             {
                 string itemName = hitCollider.gameObject.name;
-
+                animator.SetTrigger("isPicking");
+                StartCoroutine(PickupCooldown()); // Start cooldown
                 inventoryManager.AddItem(itemName, hitCollider.gameObject);
-
-                hitCollider.gameObject.SetActive(false); // Disable the item in the world after picking it up
+                hitCollider.gameObject.SetActive(false);
 
                 Debug.Log($"Picked up {itemName}");
                 return;
@@ -65,6 +69,12 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    private IEnumerator PickupCooldown()
+    {
+        canPickup = false;
+        yield return new WaitForSeconds(pickupCooldown);
+        canPickup = true;
+    }
 
     private void DropItem()
     {
@@ -75,7 +85,7 @@ public class PlayerController : MonoBehaviour
             {
                 string itemName = firstItem.Value.itemName;
 
-                //Call the InvManager script to drop the item
+                // Call the InventoryManager's DropItem method
                 inventoryManager.DropItem(itemName, transform.position);
 
                 Debug.Log($"Dropped {itemName}");
@@ -89,9 +99,13 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        controller.Move(currentMovement * Time.deltaTime);
-        //Debug.Log(currentMovement);
-        animator.SetBool("isWalking", currentMovement != Vector3.zero);
+        // Pause movement input during pickup
+        if (canPickup)
+        {
+            controller.Move(currentMovement * Time.deltaTime);
+            animator.SetBool("isWalking", currentMovement != Vector3.zero);
+        }
+
         isGrounded = controller.isGrounded;
         float moveX = Input.GetAxis("Horizontal");
         float moveZ = Input.GetAxis("Vertical");
